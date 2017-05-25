@@ -16,6 +16,8 @@ fi
 if [ ! -f /host/haproxy/firstrun ]; then
 
         echo "container first run"
+        mkdir -p /host/haproxy/config
+        mkdir -p /host/haproxy/certs
         touch /host/haproxy/firstrun
 
         #HA Proxy config

@@ -1,0 +1,9 @@
+git add --all .
+git status
+git commit -m "Kommentar"
+git push origin master
+
+git tag -a 0.1.0 a7fd16b -m "Kommentar"
+git push --tags origin master
+
+git config user.name www.eigener-server.ch
