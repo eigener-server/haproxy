@@ -18,7 +18,6 @@ if [ ! -f /host/haproxy/firstrun ]; then
         echo "container first run"
         mkdir -p /host/haproxy/config
         mkdir -p /host/haproxy/certs
-        touch /host/haproxy/firstrun
 
         #HA Proxy config
         cp /tmp/haproxy.cfg /host/haproxy/config/
@@ -27,14 +26,11 @@ if [ ! -f /host/haproxy/firstrun ]; then
         #make-ssl-cert generate-default-snakeoil
         cat /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.pem > /host/haproxy/certs/selfsigned.pem
 
-        #nextcloud container running
-        if `getent hosts nextcloud`; then
-                sed -i 's/#server web01 nextcloud/server web01 nextcloud/g' /host/haproxy/config/haproxy.cfg
-        fi
-        #letsencrypt container running?
-        if `getent hosts letsencrypt`; then
-                sed -i 's/#server web01 letsencrypt/server web01 letsencrypt/g' /host/haproxy/config/haproxy.cfg
-        fi
+        sed -i -e "s/user admin insecure-password.*/user ${HAPROXY_ADMIN_USER} insecure-password ${HAPROXY_ADMIN_PASSWORD}/" /host/haproxy/config/haproxy.cfg
+        sed -i -e "s#acl admin_white_list src.*#acl admin_white_list src ${HAPROXY_ADMIN_USER_IP}#g" /host/haproxy/config/haproxy.cfg
+
+
+        touch /host/haproxy/firstrun
 fi
 
 
